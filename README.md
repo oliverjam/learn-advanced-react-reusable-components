@@ -1,68 +1,147 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Learn Advanced React: reusable components
 
-## Available Scripts
+Making truly flexible and reusable components can be tough. It's hard to predict future design or behaviour requirements, so it's best to create the most flexible API possible for your components.
 
-In the project directory, you can run:
+## Learning outcomes
 
-### `yarn start`
+- [ ] Leveraging _composition_ to create flexible components
+- [ ] Refactoring a monolithic component to a **compound component**
+- [ ] Using context to communicate between children
+- [ ] Build more complex components on top of compound components
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Part 0: setup
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+1. Clone this repo
+1. `cd` into it and run `npm install`
+1. Run `npm start` and it should automatically open in your browser
 
-### `yarn test`
+Open the `src/InputField.js` file. It contains an input field component that renders a label, an input and the browser default validation message when the user leaves the input (if there is one).
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```jsx
+<InputField id="email" label="Email address" type="email" required />
+```
 
-### `yarn build`
+![](./screenshots/1.png)
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Part 1: multiple labels
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+Your team's product owner has decided that users need a little more help: they want the label to also contain some smaller text with more info about what's required.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Task
 
-### `yarn eject`
+Edit the `InputField` component so that it can display a smaller sub-label with an explanation of what the user is supposed to enter.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+![](./screenshots/2.png)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Part 2: inline validation
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Your designer has decided that on certain pages the validation should appear _next to_ the input rather than below.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Task
 
-## Learn More
+Edit the `InputField` component so that it has the option of rending the validation message next to the input instead of below it.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+![](./screenshots/3.png)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Interlude: avoiding the apropcalypse
 
-### Code Splitting
+Did your solutions to parts 2 & 3 add new props to the `InputField`? Can you see how this is unsustainable as design and behaviour requirements continually evolve?
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+Eventually you'll hit the [apropcalypse](https://twitter.com/gurlcode/status/1002110517094371328?lang=en), where your components takes 25 different configuration props.
 
-### Analyzing the Bundle Size
+We can look at how HTML works for a better API: one that the developer using the component can _compose_:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+```html
+<label for="fruit">Choose fruit</label>
+<select id="fruit">
+  <option>Apple</option>
+  <option>Orange</option>
+</select>
+```
 
-### Making a Progressive Web App
+With a composable API the developer has full control over how and where each composite part is rendered.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+In React components that work this way are usually called _compound components_. Here's how our `InputField` might look as a compound component:
 
-### Advanced Configuration
+```jsx
+<InputField id="email">
+  <Label>Email address</Label>
+  <Input type="email" required />
+  <Validation />
+</InputField>
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+Now the changes from parts 2 & 3 are relatively simple:
 
-### Deployment
+```jsx
+<InputField id="email">
+  <Label>
+    <div>Email address</div>
+    <div style={{ fontSize: 14 }}>Please enter a valid email address</div>
+  </Label>
+  <div style={{ display: "flex" }}>
+    <Input type="email" required />
+    <Validation />
+  </div>
+</InputField>
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+Since the components compose together developers already know how to use them. We can make all kinds of variants without ever touching the underlying component.
 
-### `yarn build` fails to minify
+### React context
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+You may be wondering how those sub-components have access to the state values in the parent. We can communicate across component boundaries in two ways in React.
+
+First, we can pass props. This won't work here since the `InputField` no longer renders these sub-components, so it can't pass any props.
+
+The second is React context. This is a way to bypass the usual component tree and access values directly from the children. Here's a simplified example:
+
+```jsx
+const ExampleContext = React.useContext();
+
+function Example() {
+  const [toggle, setToggle] = React.useState(false);
+  return (
+    <ExampleContext.Provider value={{ toggle, setToggle }}>
+      {children}
+    </ExampleContext.Provider>
+  );
+}
+
+function Child() {
+  const { toggle, setToggle } = React.useContext(ExampleContext);
+  return <div>{toggle ? "open" : "closed"}</div>;
+}
+
+function App() {
+  return (
+    <Example>
+      <div>
+        <section>
+          <Child />
+        </section>
+      </div>
+    </Example>
+  );
+}
+```
+
+See how this allows us a child deeper in the tree to access values without passing them as props?
+
+## Part 3: compound component
+
+Let's refactor the `InputField` to support the above compound component API. You'll need to export several sub-components instead of one monolithic one and use React context to communicate between them.
+
+### Task
+
+Edit `src/index.js` to render this inside of `App`:
+
+```jsx
+<InputField id="email">
+  <Label>Email address</Label>
+  <Input type="email" required />
+  <Validation />
+</InputField>
+```
+
+Refactor `InputField` to make this composable API work. The end result should be the same as part 1.
