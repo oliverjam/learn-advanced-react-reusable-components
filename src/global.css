@@ -1,0 +1,24 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  padding: 3rem;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, Helvetica, Arial,
+    sans-serif;
+  color: hsl(220, 10%, 30%);
+  background-color: hsl(220, 10%, 96%);
+}
+
+/* reset defaults */
+
+input,
+label {
+  display: block;
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  border: 0;
+  background: none;
+}
