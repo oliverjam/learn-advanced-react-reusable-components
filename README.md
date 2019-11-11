@@ -21,7 +21,7 @@ Open the `src/InputField.js` file. It contains an input field component that ren
 <InputField id="first-name" label="First name" />
 ```
 
-![](./screenshots/intro.png)
+![](./screenshots/initial.png)
 
 ## Part 1: multiple labels
 
@@ -31,7 +31,7 @@ Your team's product owner has decided that users need a little more help: they w
 
 Edit the `InputField` component so that it can display a smaller sub-label with an explanation of what the user is supposed to enter.
 
-![](./screenshots/1.png)
+![](./screenshots/part-1.png)
 
 ## Part 2: moving the label
 
@@ -41,7 +41,7 @@ Your designer has decided that on certain pages the label should appear _below_.
 
 Edit the `InputField` component so that it has the option of rending the label message below the input instead of above it.
 
-![](./screenshots/2.png)
+![](./screenshots/part-2.png)
 
 ## Interlude: avoiding the apropcalypse
 
@@ -79,11 +79,11 @@ Whoever is rendering the component can now move the label below the input withou
 
 <!-- Since the components compose together developers already know how to use them. We can make all kinds of variants without ever touching the underlying component. -->
 
-## Part 3: compound components
+## Part 3: compound components
 
 Let's refactor the `InputField` to support the above compound component API. You'll need to export several sub-components instead of one monolithic one.
 
-### Task
+### Task
 
 Edit `src/index.js` to render this:
 
@@ -113,7 +113,7 @@ Edit `src/index.js` to import this new component and render it like so:
 
 You should now see validation messages appear after you tab out of the input.
 
-![](./screenshots/4.png)
+![](./screenshots/part-4.png)
 
 We're going to refactor this to a compound component that we can use like so:
 
@@ -165,6 +165,6 @@ function App() {
 
 See how this allows us a child deeper in the tree to access values without passing them as props?
 
-### Task
+### Task
 
 Refactor `ValidatedInputField` to make the composable API work. You'll need to pass the ID and state values down via context.
