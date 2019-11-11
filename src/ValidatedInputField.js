@@ -11,7 +11,11 @@ function InputField({ id, label, ...rest }) {
         className="inputField__input"
         id={id + "-input"}
         // if there's an error put it in state when user tabs out of input
-        onBlur={e => setValidation("Error: " + e.target.validationMessage)}
+        onBlur={({ target }) => {
+          if (target.validationMessage) {
+            setValidation("Error: " + target.validationMessage);
+          }
+        }}
         // we need to know the ID of the error div to link them together
         aria-describedby={id + "-validation"}
         {...rest}

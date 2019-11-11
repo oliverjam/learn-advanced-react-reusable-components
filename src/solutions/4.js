@@ -31,7 +31,11 @@ export function Input({ className = "", ...rest }) {
       className={"inputField__input" + className}
       id={id + "-input"}
       aria-describedby={id + "-validation"}
-      onBlur={e => setValidation("Error: " + e.target.validationMessage)}
+      onBlur={({ target }) => {
+        if (target.validationMessage) {
+          setValidation("Error: " + target.validationMessage);
+        }
+      }}
       {...rest}
     />
   );
