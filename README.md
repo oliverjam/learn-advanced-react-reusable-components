@@ -49,7 +49,7 @@ Did your solutions to parts 2 & 3 add new props to the `InputField`? Can you see
 
 Eventually you'll hit the [apropcalypse](https://twitter.com/gurlcode/status/1002110517094371328?lang=en), where your components takes 25 different configuration props.
 
-We can look at how HTML works for a better API: one that the developer using the component can _compose_:
+We can look at how HTML works for a better API:
 
 ```html
 <label for="fruit">Choose fruit</label>
@@ -59,7 +59,7 @@ We can look at how HTML works for a better API: one that the developer using the
 </select>
 ```
 
-With a composable API the developer has full control over how and where each composite part is rendered.
+With a composable API like this the developer has full control over how and where each composite part is rendered.
 
 In React components that work this way are usually called _compound components_. Here's how our `InputField` might look as a compound component:
 
@@ -108,7 +108,7 @@ Let's look at a more complex example. Open `src/ValidatedInputField.js`. This is
 Edit `src/index.js` to import this new component and render it like so:
 
 ```jsx
-<ValidatedInputField id="email" label="Email address" required />
+<ValidatedInputField id="email" label="Email address" type="email" required />
 ```
 
 You should now see validation messages appear after you tab out of the input.
@@ -163,7 +163,7 @@ function App() {
 }
 ```
 
-See how this allows us a child deeper in the tree to access values without passing them as props?
+See how this allows a child deeper in the tree to access values without passing them as props?
 
 ### Task
 
