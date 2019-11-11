@@ -168,3 +168,22 @@ See how this allows a child deeper in the tree to access values without passing 
 ### Task
 
 Refactor `ValidatedInputField` to make the composable API work. You'll need to pass the ID and state values down via context.
+
+## Part 5: password input
+
+Our compound component is flexible enough that we can build more complex components using the pieces, without touching the underlying `InputField`.
+
+Let's build a `PasswordField` component that lets users click a button to toggle their password visible/hidden.
+
+### Task
+
+Editing **only** `src/index.js` use your `ValidatedInputField` compound component to create a toggle-able password input.
+
+<details>
+<summary>Click for a hint:</summary>
+
+You can make an `<input type="password">` show what's in it by changing it to `type="text"`.
+
+</details>
+
+![](./screenshots/part-5.gif)
