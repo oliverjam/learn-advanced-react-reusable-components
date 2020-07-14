@@ -55,7 +55,7 @@ Your designer has decided that on certain pages all the label text should appear
 
 ### Task
 
-Edit the `InputField` component so that it has the option of rending the label message below the input instead of above it.
+Edit the `InputField` component so that it has the option of rendering the label message below the input instead of above it.
 
 ![](./screenshots/part-2.png)
 
@@ -63,7 +63,7 @@ Edit the `InputField` component so that it has the option of rending the label m
 
 Did your solutions to parts 2 & 3 add new props to the `InputField`? Can you see how this is unsustainable as design and behaviour requirements continually evolve?
 
-Eventually you'll hit the [apropcalypse](https://twitter.com/gurlcode/status/1002110517094371328?lang=en), where your components takes 25 different configuration props.
+Eventually you'll hit the [apropcalypse](https://twitter.com/gurlcode/status/1002110517094371328?lang=en), where your component takes 25 different configuration props.
 
 ```jsx
 <InputField
@@ -134,11 +134,11 @@ Refactor `InputField` to make this composable API work. The end result should lo
 
 ### Hints
 
-Good compound components should behave like HTML elements. They shouldn't "swallow" props—for example if they receive a classname they should pass it on to their underlying DOM element. This ensures they be easily styled/customised.
+Good compound components should behave like HTML elements. They shouldn't "swallow" props—for example if they receive a classname they should pass it on to their underlying DOM element. This ensures they can be easily styled/customised.
 
 ## Part 4: context
 
-Our compound component is nice, but it actually has a regression in develop experience. We now have to manually pass IDs to each element to ensure everything is connected up accessibly. With the single `<InputField id="blah" />` component this is all handled for us.
+Our compound component is nice, but it actually has a regression in developer experience. We now have to manually pass IDs to each element to ensure everything is connected up accessibly. With the single `<InputField id="blah" />` component this is all handled for us.
 
 Ideally we could pass the ID once and not worry about the rest, like this:
 
@@ -156,12 +156,12 @@ We can communicate across component boundaries in two ways in React.
 
 First, we can pass props. This won't work here since the `InputField` no longer renders these sub-components, so it can't pass any props.
 
-The second is [React context](https://reactjs.org/docs/hooks-reference.html#usecontext). This is a way to bypass the component tree and access values directly from the children. Here's a simplified example:
+The second is [React context](https://reactjs.org/docs/context.html). This is a way to bypass the component tree and access values directly from the children. Here's a simplified example:
 
 ```jsx
 const ExampleContext = React.useContext();
 
-function Example() {
+function Example({ children }) {
   const isOpen = false;
   return (
     <ExampleContext.Provider value={isOpen}>{children}</ExampleContext.Provider>
@@ -186,9 +186,9 @@ function App() {
 }
 ```
 
-No matter how deep down the component tree `Child` is rendered it can still access the `isOpen` value from the parent `Example`.
+No matter how deep down the component tree `Child` is rendered it can still access the `isOpen` value from the parent `Example` using the [`useContext`](https://reactjs.org/docs/hooks-reference.html#usecontext) hook.
 
-### Task
+### Task
 
 Edit `src/index.js` to only pass a single ID:
 
