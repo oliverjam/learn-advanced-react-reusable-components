@@ -1,16 +1,15 @@
 .inputField {
   max-width: max-content;
-  display: grid;
-  grid-row-gap: 0.75rem;
 }
 
-.inputField__label {
-  display: grid;
-  grid-row-gap: 0.25rem;
+.inputField__info {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
 }
 
 .inputField__input {
   max-width: 32ch;
+  margin-top: 0.75rem;
   border-radius: 0.125rem;
   box-shadow: 0 2px 6px hsla(220, 20%, 40%, 0.3);
   padding: 0.5rem;
@@ -19,7 +18,7 @@
 
 .inputField__input:focus {
   outline: 0;
-  box-shadow: 0 2px 6px hsla(220, 20%, 40%, 0.3),
+  box-shadow: 0 1px 4px hsla(220, 20%, 40%, 0.3),
     0 6px 14px hsla(220, 20%, 50%, 0.2);
 }
 

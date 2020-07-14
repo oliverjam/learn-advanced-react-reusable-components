@@ -8,6 +8,10 @@ export function Label({ className = "", ...rest }) {
   return <label className={"inputField__label" + className} {...rest} />;
 }
 
+export function Info({ className = "", ...rest }) {
+  return <div className={"inputField__info" + className} {...rest} />;
+}
+
 export function Input({ className = "", ...rest }) {
   return <input className={"inputField__input" + className} {...rest} />;
 }

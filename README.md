@@ -29,13 +29,29 @@ Your team's product owner has decided that users need a little more help: they w
 
 ## Task
 
-Edit the `InputField` component so that it can display a smaller sub-label with an explanation of what the user is supposed to enter.
+Edit the `InputField` component so that it can display smaller info text within the label. The rendered HTML should look like this:
+
+```html
+<div class="inputField">
+  <label class="inputField__label" for="first-name">First name</label>
+  <div class="inputField__info" id="first-name-info">
+    Please enter your first name
+  </div>
+  <input
+    class="inputField__input"
+    id="first-name"
+    aria-describedby="first-name-info"
+  />
+</div>
+```
+
+**Note**: we have to use [`aria-describedby`](https://developer.paciellogroup.com/blog/2018/09/describing-aria-describedby/) to associate the input with the info message, so it gets read out by screen-readers when the input is focused.
 
 ![](./screenshots/part-1.png)
 
 ## Part 2: moving the label
 
-Your designer has decided that on certain pages the label should appear _below_.
+Your designer has decided that on certain pages all the label text should appear _below_.
 
 ### Task
 
@@ -48,6 +64,19 @@ Edit the `InputField` component so that it has the option of rending the label m
 Did your solutions to parts 2 & 3 add new props to the `InputField`? Can you see how this is unsustainable as design and behaviour requirements continually evolve?
 
 Eventually you'll hit the [apropcalypse](https://twitter.com/gurlcode/status/1002110517094371328?lang=en), where your components takes 25 different configuration props.
+
+```jsx
+<InputField
+  id="first-name"
+  label="First name"
+  info="Please enter your given name as it appears on your passport"
+  showLabelBelow={true}
+  labelClassName="bold"
+  inputClassName="width-50"
+  capitalizeLabel={false}
+  trailingIcon={<EyeIcon size="32" />}
+/>
+```
 
 We can look at how HTML works for a better API:
 
@@ -65,19 +94,17 @@ In React components that work this way are usually called _compound components_.
 
 ```jsx
 <InputField>
-  <Label htmlFor="first-name">
-    <div>First name</div>
-    <div style={{ fontSize: 14 }}>
-      Please enter your given name as it appears on your passport
-    </div>
-  </Label>
+  <Label htmlFor="first-name">First name</Label>
+  <Info id="first-name-info">
+    Please enter your given name as it appears on your passport
+  </Info>
   <Input id="first-name" />
 </InputField>
 ```
 
-Whoever is rendering the component can now move the label below the input without needing any special props.
+Whoever is rendering the component can now move the labels below the input without needing any special props.
 
-<!-- Since the components compose together developers already know how to use them. We can make all kinds of variants without ever touching the underlying component. -->
+Since the components compose together developers already know how to use them. We can make all kinds of variants without ever touching the underlying component, by re-ordering them or adding classnames etc.
 
 ## Part 3: compound components
 
@@ -85,16 +112,14 @@ Let's refactor the `InputField` to support the above compound component API. You
 
 ### Task
 
-Edit `src/index.js` to render this:
+Edit `src/index.js` to render our component how we'd like:
 
 ```jsx
 <InputField>
-  <Label htmlFor="first-name">
-    <div>First name</div>
-    <div style={{ fontSize: 14 }}>
-      Please enter your given name as it appears on your passport
-    </div>
-  </Label>
+  <Label htmlFor="first-name">First name</Label>
+  <Info id="first-name-info">
+    Please enter your given name as it appears on your passport
+  </Info>
   <Input id="first-name" />
 </InputField>
 ```
