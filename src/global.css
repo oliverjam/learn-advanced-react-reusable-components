@@ -14,11 +14,12 @@ body {
 /* reset defaults */
 
 input,
-label {
-  display: block;
-  color: inherit;
+label,
+button {
+  border: 0;
   font-size: inherit;
   font-family: inherit;
-  border: 0;
+  line-height: 1;
   background: none;
+  color: inherit;
 }

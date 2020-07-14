@@ -6,12 +6,10 @@ function App() {
   return (
     <InputField id="password">
       <Label>Password</Label>
-      <div style={{ display: "flex" }}>
-        <Input type={visible ? "text" : "password"} />
-        <button onClick={() => setVisible(!visible)}>
-          {visible ? "Hide" : "Show"}
-        </button>
-      </div>
+      <Input type={visible ? "text" : "password"} />
+      <button onClick={() => setVisible(!visible)}>
+        {visible ? "Hide" : "Show"}
+      </button>
     </InputField>
   );
 }
