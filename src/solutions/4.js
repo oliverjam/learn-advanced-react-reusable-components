@@ -5,7 +5,7 @@ const IdContext = React.createContext();
 export function InputField({ id, className = "", ...rest }) {
   return (
     <IdContext.Provider value={id}>
-      <div className={"inputField" + className} {...rest} />
+      <div {...rest} className={"inputField" + className} />
     </IdContext.Provider>
   );
 }
@@ -13,7 +13,7 @@ export function InputField({ id, className = "", ...rest }) {
 export function Label({ className = "", ...rest }) {
   const id = React.useContext(IdContext);
   return (
-    <label htmlFor={id} className={"inputField__label" + className} {...rest} />
+    <label {...rest} htmlFor={id} className={"inputField__label" + className} />
   );
 }
 
@@ -21,9 +21,9 @@ export function Info({ className = "", ...rest }) {
   const id = React.useContext(IdContext);
   return (
     <div
+      {...rest}
       id={id + "-info"}
       className={"inputField__info" + className}
-      {...rest}
     />
   );
 }
@@ -32,10 +32,10 @@ export function Input({ className = "", ...rest }) {
   const id = React.useContext(IdContext);
   return (
     <input
+      {...rest}
       id={id}
       className={"inputField__input" + className}
       aria-describedby={id + "-info"}
-      {...rest}
     />
   );
 }
