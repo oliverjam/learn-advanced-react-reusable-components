@@ -1,10 +1,10 @@
 import React from "react";
-import { ValidatedInputField, Label, Input, Validation } from "./4";
+import { InputField, Label, Input } from "./4";
 
 function App() {
   const [visible, setVisible] = React.useState(false);
   return (
-    <ValidatedInputField id="password">
+    <InputField id="password">
       <Label>Password</Label>
       <div style={{ display: "flex" }}>
         <Input type={visible ? "text" : "password"} />
@@ -12,8 +12,7 @@ function App() {
           {visible ? "Hide" : "Show"}
         </button>
       </div>
-      <Validation />
-    </ValidatedInputField>
+    </InputField>
   );
 }
 

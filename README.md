@@ -115,64 +115,62 @@ Let's refactor the `InputField` to support the above compound component API. You
 Edit `src/index.js` to render our component how we'd like:
 
 ```jsx
-<InputField>
-  <Label htmlFor="first-name">First name</Label>
-  <Info id="first-name-info">
-    Please enter your given name as it appears on your passport
-  </Info>
-  <Input id="first-name" />
-</InputField>
+import { InputField, Label, Info, Input } from "./InputField.js";
+
+function App() {
+  return (
+    <InputField>
+      <Label htmlFor="first-name">First name</Label>
+      <Info id="first-name-info">
+        Please enter your given name as it appears on your passport
+      </Info>
+      <Input id="first-name" />
+    </InputField>
+  );
+}
 ```
 
 Refactor `InputField` to make this composable API work. The end result should look the same as after part 2.
 
-## Part 4: a stateful component
+### Hints
 
-Let's look at a more complex example. Open `src/ValidatedInputField.js`. This is the same component we started with, but it also renders the browser's default validation message when the user leaves the field (if there is one). This message is associated with the input using `aria-describedby` and its ID.
+Good compound components should behave like HTML elements. They shouldn't "swallow" props—for example if they receive a classname they should pass it on to their underlying DOM element. This ensures they be easily styled/customised.
 
-Edit `src/index.js` to import this new component and render it like so:
+## Part 4: context
 
-```jsx
-<ValidatedInputField id="email" label="Email address" type="email" required />
-```
+Our compound component is nice, but it actually has a regression in develop experience. We now have to manually pass IDs to each element to ensure everything is connected up accessibly. With the single `<InputField id="blah" />` component this is all handled for us.
 
-You should now see validation messages appear after you tab out of the input.
-
-![](./screenshots/part-4.png)
-
-We're going to refactor this to a compound component that we can use like so:
+Ideally we could pass the ID once and not worry about the rest, like this:
 
 ```jsx
-<InputField id="email">
-  <Label>Email address</Label>
-  <Input type="email" required />
-  <Validation />
+<InputField id="first-name">
+  <Label>First name</Label>
+  <Info>Please enter your given name as it appears on your passport</Info>
+  <Input />
 </InputField>
 ```
 
-### React context
+But how can our sub-components have access to a prop passed to the top-level one?
 
-You may be wondering how those sub-components have access to the state values in the parent. We can communicate across component boundaries in two ways in React.
+We can communicate across component boundaries in two ways in React.
 
 First, we can pass props. This won't work here since the `InputField` no longer renders these sub-components, so it can't pass any props.
 
-The second is [React context](https://reactjs.org/docs/hooks-reference.html#usecontext). This is a way to bypass the usual component tree and access values directly from the children. Here's a simplified example:
+The second is [React context](https://reactjs.org/docs/hooks-reference.html#usecontext). This is a way to bypass the component tree and access values directly from the children. Here's a simplified example:
 
 ```jsx
 const ExampleContext = React.useContext();
 
 function Example() {
-  const [toggle, setToggle] = React.useState(false);
+  const isOpen = false;
   return (
-    <ExampleContext.Provider value={{ toggle, setToggle }}>
-      {children}
-    </ExampleContext.Provider>
+    <ExampleContext.Provider value={isOpen}>{children}</ExampleContext.Provider>
   );
 }
 
 function Child() {
-  const { toggle, setToggle } = React.useContext(ExampleContext);
-  return <div>{toggle ? "open" : "closed"}</div>;
+  const isOpen = React.useContext(ExampleContext);
+  return <div>{isOpen ? "open" : "closed"}</div>;
 }
 
 function App() {
@@ -188,11 +186,21 @@ function App() {
 }
 ```
 
-See how this allows a child deeper in the tree to access values without passing them as props?
+No matter how deep down the component tree `Child` is rendered it can still access the `isOpen` value from the parent `Example`.
 
-### Task
+### Task
 
-Refactor `ValidatedInputField` to make the composable API work. You'll need to pass the ID and state values down via context.
+Edit `src/index.js` to only pass a single ID:
+
+```jsx
+<InputField id="first-name">
+  <Label>First name</Label>
+  <Info>Please enter your given name as it appears on your passport</Info>
+  <Input />
+</InputField>
+```
+
+Refactor your components using context to make this API work. The end result should look the same as after part 3.
 
 ## Part 5: password input
 
@@ -202,7 +210,7 @@ Let's build a `PasswordField` component that lets users click a button to toggle
 
 ### Task
 
-Editing **only** `src/index.js` use your `ValidatedInputField` compound component to create a toggle-able password input.
+Editing **only** `src/index.js` use your `InputField` compound component to create a toggle-able password input.
 
 <details>
 <summary>Click for a hint:</summary>

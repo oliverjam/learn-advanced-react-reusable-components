@@ -1,55 +1,41 @@
 import React from "react";
 
-const InputContext = React.createContext();
+const IdContext = React.createContext();
 
-export function ValidatedInputField({ className = "", id, children, ...rest }) {
-  const [validation, setValidation] = React.useState("");
+export function InputField({ id, className = "", ...rest }) {
   return (
-    <div className={"inputField" + className} id={id} {...rest}>
-      <InputContext.Provider value={{ id, validation, setValidation }}>
-        {children}
-      </InputContext.Provider>
-    </div>
+    <IdContext.Provider value={id}>
+      <div className={"inputField" + className} {...rest} />
+    </IdContext.Provider>
   );
 }
 
 export function Label({ className = "", ...rest }) {
-  const { id } = React.useContext(InputContext);
+  const id = React.useContext(IdContext);
   return (
-    <label
-      className={"inputField__label" + className}
-      htmlFor={id + "-input"}
+    <label htmlFor={id} className={"inputField__label" + className} {...rest} />
+  );
+}
+
+export function Info({ className = "", ...rest }) {
+  const id = React.useContext(IdContext);
+  return (
+    <div
+      id={id + "-info"}
+      className={"inputField__info" + className}
       {...rest}
     />
   );
 }
 
 export function Input({ className = "", ...rest }) {
-  const { id, setValidation } = React.useContext(InputContext);
+  const id = React.useContext(IdContext);
   return (
     <input
+      id={id}
       className={"inputField__input" + className}
-      id={id + "-input"}
-      aria-describedby={id + "-validation"}
-      onBlur={({ target }) => {
-        if (target.validationMessage) {
-          setValidation("Error: " + target.validationMessage);
-        }
-      }}
+      aria-describedby={id + "-info"}
       {...rest}
     />
-  );
-}
-
-export function Validation({ className = "", ...rest }) {
-  const { id, validation } = React.useContext(InputContext);
-  return (
-    <div
-      className={"inputField__validation" + className}
-      id={id + "-validation"}
-      {...rest}
-    >
-      {validation}
-    </div>
   );
 }
