@@ -13,9 +13,9 @@ Making truly flexible and reusable components can be tough. It's hard to predict
 
 1. Clone this repo
 1. `cd` into it and run `npm install`
-1. Run `npm start` and it should automatically open in your browser
+1. Run `npm start` and open in your browser
 
-Open the `src/InputField.js` file. It contains an input field component that renders a `<label>` and an `<input>`. It spreads any extra props on to the input element.
+Open the `src/InputField.jsx` file. It contains an input field component that renders a `<label>` and an `<input>`. It spreads any extra props onto the input element.
 
 ```jsx
 <InputField id="first-name" label="First name" />
@@ -51,17 +51,17 @@ Edit the `InputField` component so that it can display smaller info text within 
 
 ## Part 2: moving the label
 
-Your designer has decided that on certain pages all the label text should appear _below_.
+Your designer has decided that on certain pages all the label text should appear _below_ the input itself.
 
 ### Task
 
-Edit the `InputField` component so that it has the option of rendering the label message below the input instead of above it.
+Edit the `InputField` component so that it has _the option_ of rendering the label message below the input instead of above it.
 
 ![](./screenshots/part-2.png)
 
 ## Interlude: avoiding the apropcalypse
 
-Did your solutions to parts 2 & 3 add new props to the `InputField`? Can you see how this is unsustainable as design and behaviour requirements continually evolve?
+Did your solutions to parts 1 & 2 add new props to the `InputField`? Can you see how this is unsustainable as design and behaviour requirements continually evolve?
 
 Eventually you'll hit the [apropcalypse](https://twitter.com/gurlcode/status/1002110517094371328?lang=en), where your component takes 25 different configuration props.
 
@@ -78,7 +78,7 @@ Eventually you'll hit the [apropcalypse](https://twitter.com/gurlcode/status/100
 />
 ```
 
-We can look at how HTML works for a better API:
+We can look at how HTML works for a better pattern:
 
 ```html
 <label for="fruit">Choose fruit</label>
@@ -88,9 +88,9 @@ We can look at how HTML works for a better API:
 </select>
 ```
 
-With a composable API like this the developer has full control over how and where each composite part is rendered.
+With a composable API like this the developer has full control over how and where each composite part is rendered. If they want to add a classname to the first `<option>` they can just do it themselves.
 
-In React components that work this way are usually called _compound components_. Here's how our `InputField` might look as a compound component:
+React components that work this way are usually called "compound components". Here's how using our `InputField` might look if it were a compound component:
 
 ```jsx
 <InputField>
@@ -102,20 +102,20 @@ In React components that work this way are usually called _compound components_.
 </InputField>
 ```
 
-Whoever is rendering the component can now move the labels below the input without needing any special props.
+The developer using the component can now move the labels below the input without needing any special props.
 
-Since the components compose together developers already know how to use them. We can make all kinds of variants without ever touching the underlying component, by re-ordering them or adding classnames etc.
+Since the components compose together developers already know how to use them. They can make all kinds of variants without ever touching the underlying component, by re-ordering them or adding classnames etc.
 
 ## Part 3: compound components
 
-Let's refactor the `InputField` to support the above compound component API. You'll need to export several sub-components instead of one monolithic one.
+Let's refactor the `InputField` to support the above compound component API. You'll need to export several small components from the file, instead of one monolithic one.
 
 ### Task
 
-Edit `src/index.js` to render our component how we'd like:
+Edit `src/index.jsx` to render the component how we'd like:
 
 ```jsx
-import { InputField, Label, Info, Input } from "./InputField.js";
+import { InputField, Label, Info, Input } from "./InputField.jsx";
 
 function App() {
   return (
@@ -130,7 +130,7 @@ function App() {
 }
 ```
 
-Refactor `InputField` to make this composable API work. The end result should look the same as after part 2.
+Then refactor `InputField` to make this composable API work. The end result on the page should look the same as after part 2.
 
 ### Hints
 
@@ -140,7 +140,7 @@ Good compound components should behave like HTML elements. They shouldn't "swall
 
 Our compound component is nice, but it actually has a regression in developer experience. We now have to manually pass IDs to each element to ensure everything is connected up accessibly. With the single `<InputField id="blah" />` component this is all handled for us.
 
-Ideally we could pass the ID once and not worry about the rest, like this:
+Ideally we could pass the ID once and not worry about the other elements, like this:
 
 ```jsx
 <InputField id="first-name">
@@ -156,7 +156,7 @@ We can communicate across component boundaries in two ways in React.
 
 First, we can pass props. This won't work here since the `InputField` no longer renders these sub-components, so it can't pass any props.
 
-The second is [React context](https://reactjs.org/docs/context.html). This is a way to bypass the component tree and access values directly from the children. Here's a simplified example:
+The second is [React context](https://reactjs.org/docs/context.html). This is a way to bypass the component tree and access values directly in the children. Here's a simplified example:
 
 ```jsx
 const ExampleContext = React.useContext();
@@ -188,9 +188,11 @@ function App() {
 
 No matter how deep down the component tree `Child` is rendered it can still access the `isOpen` value from the parent `Example` using the [`useContext`](https://reactjs.org/docs/hooks-reference.html#usecontext) hook.
 
+This is perfect for compound components: it allows the parent component to share props and state with whatever was rendered inside of it.
+
 ### Task
 
-Edit `src/index.js` to only pass a single ID:
+Edit `src/index.jsx` to only pass a single ID:
 
 ```jsx
 <InputField id="first-name">
@@ -200,7 +202,7 @@ Edit `src/index.js` to only pass a single ID:
 </InputField>
 ```
 
-Refactor your components using context to make this API work. The end result should look the same as after part 3.
+Refactor your components using context to make this API work. Use context to make the `id` available to the children so they can correctly set the attributes they need. The end result should look the same as after part 3.
 
 ## Part 5: password input
 
@@ -210,12 +212,12 @@ Let's build a `PasswordField` component that lets users click a button to toggle
 
 ### Task
 
-Editing **only** `src/index.js` use your `InputField` compound component to create a toggle-able password input.
+Editing **only** `src/index.jsx` use your `InputField` compound component to create a toggle-able password input.
 
 <details>
 <summary>Click for a hint:</summary>
 
-You can make an `<input type="password">` show what's in it by changing it to `type="text"`.
+You can make the text in an `<input type="password">` visible by changing it to `type="text"`.
 
 </details>
 
