@@ -2,21 +2,14 @@
   "name": "learn-advanced-react-reusable-components",
   "version": "0.1.0",
   "private": true,
-  "devDependencies": {
-    "react-scripts": "^3.4.1"
-  },
   "dependencies": {
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build"
   },
   "browserslist": {
     "production": [
@@ -29,5 +22,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "vite": "^2.4.3"
   }
 }
